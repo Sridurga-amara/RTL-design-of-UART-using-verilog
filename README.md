@@ -15,7 +15,6 @@
 -Clock Frequency: 50 MHz
 
 **Functional Overview**
-
 -UART is a widely used asynchronous serial communication protocol. 
 -This design enables full-duplex communication between devices using only two lines: TX (transmit) and RX (receive).
 Baudrate Module: Generates baud ticks based on the target baud rate.
@@ -23,7 +22,6 @@ UART_TX Module: Converts parallel 8-bit data into serial stream with start, data
 UART_RX Module: Detects the incoming serial bits and reconstructs them into parallel data.
 
 **Advantages of UART:**
-
 -Reduces error by up to ~30–50% in noisy environments compared to SPI/I2C because of start/stop bit synchronization.
 -Built-in framing and optional parity allow simple error detection.
 -Supports longer distances without additional hardware.
