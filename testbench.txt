@@ -1,0 +1,26 @@
+//------------------------------------------Testbench
+module tb;
+reg clk,reset;
+reg tx_start;
+reg [7:0]tx_data;
+wire [7:0]rx_data;
+wire tx_done;
+wire rx_done;
+uart_top uut(.clk(clk),.reset(reset),.tx_start(tx_start),.tx_data(tx_data),.rx_data(rx_data),.tx_done(tx_done),.rx_done(rx_done));
+initial begin 
+clk = 0;
+end
+always #10 clk<=~clk;
+initial begin
+tx_data= 8'b11110000;
+reset =1;
+#100 reset=0;
+#10 tx_start=1;
+#2000000 $stop;
+end
+initial 
+begin
+$monitor("time =%t ,reset=%d, tx_data =%b,tx=%b,tx_done=%b,rx_data=%b,rx_done=%b",$time,reset,tx_data,uut.tx,tx_done,tx_data,rx_done);
+end
+
+endmodule

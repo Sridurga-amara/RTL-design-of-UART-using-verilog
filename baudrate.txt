@@ -1,0 +1,25 @@
+//--------------------------------------------------Baud clock generator
+module baudrate(
+    input wire clk,
+    input wire reset,
+    output reg baud_tick
+);
+    parameter BAUD_RATE = 9600;
+    parameter CLOCK_FREQ = 50000000;
+    parameter BIT_PERIOD = CLOCK_FREQ / BAUD_RATE;
+    reg [15:0] counter;
+
+    always @(posedge clk or posedge reset) begin
+        if (reset) begin
+            counter <= 0;
+            baud_tick <= 0;
+        end else if (counter < BIT_PERIOD - 1) begin
+            counter <= counter + 1;
+            baud_tick <= 0;
+        end else begin
+            counter <= 0;
+            baud_tick <= 1;
+        end
+    end
+endmodule
+

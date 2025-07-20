@@ -1,0 +1,48 @@
+//-------------------------------------------Transmitter module
+module uart_tx (
+    input wire clk,
+    input wire reset,
+    input wire tx_start,
+    input wire [7:0] tx_data,
+    input wire baud_tick,
+    output reg tx,
+    output reg tx_done
+);
+    // State definitions
+    parameter IDLE = 0, START = 1, DATA = 2, STOP = 3;
+    reg [1:0] state = IDLE;
+    reg [2:0] bit_index;
+
+    always @(posedge clk or posedge reset) begin
+        if (reset) begin
+            state <= IDLE;
+            tx_done <= 0;
+            tx <= 1;  // Idle state of UART line is high
+            bit_index <= 0;
+        end else if (baud_tick) begin
+            case (state)
+                IDLE: begin
+                    if (tx_start) begin
+                        state <= START;
+                        tx_done <= 0;
+                        bit_index <= 0;
+                    end
+                end
+                START: begin
+                    tx <= 0;  // Start bit
+                    state <= DATA;
+                end
+                DATA: begin
+                    tx <= tx_data[bit_index];
+                    bit_index <= bit_index + 1;
+                    if (bit_index == 7) state <= STOP;
+                end
+                STOP: begin
+                    tx <= 1;  // Stop bit
+                    state <= IDLE;
+                    tx_done <= 1;
+                end
+            endcase
+        end
+    end
+endmodule
